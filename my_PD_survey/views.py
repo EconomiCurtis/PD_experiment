@@ -5,6 +5,15 @@ from .models import Constants
 
 from otreeutils.surveys import SurveyPage, setup_survey_pages
 
+
+class StartPage(Page):
+    def is_displayed(self):
+        if self.round_number == 1:
+            print('This is the start of PD survey')
+        print(self.participant.vars)
+        return self.round_number == 1
+
+
 # class SurveyIntro(Page):
 #     pass
 
@@ -50,6 +59,7 @@ survey_pages = [
 setup_survey_pages(models.Player, survey_pages)
 
 page_sequence = [
+    StartPage,
     # SurveyIntro,
 ]
 

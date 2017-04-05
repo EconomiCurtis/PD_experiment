@@ -2,6 +2,16 @@ from otree.api import Currency as c, currency_range
 from . import models
 from ._builtin import Page, WaitPage
 from .models import Constants
+import random
+
+
+class StartPage(Page):
+    def is_displayed(self):
+        print(('coordination:at_StartPage',self.participant.vars))
+        return self.round_number == 1
+
+    def before_next_page(self):
+        print(('coordination:leaving_StartPage',self.participant.vars))
 
 
 class Decision(Page):
@@ -19,6 +29,11 @@ class Decision(Page):
             'p22': Constants.payoff_matrix[str(self.round_number)]['Y']['Y'],
             'num_other_players': len(self.subsession.get_players()) - 1
         }
+
+    def before_next_page(self):
+        if self.timeout_happened:
+            self.player.action = random.choice(['X','Y'])
+            self.player.guess = random.randint(1,self.session.vars['num_subjects']-1)
 
 
 class DecisionWaitPage(WaitPage):
@@ -38,6 +53,7 @@ class DecisionWaitPage(WaitPage):
             'p22': Constants.payoff_matrix[str(self.round_number)]['Y']['Y'],
             'num_other_players': len(self.subsession.get_players()) - 1
         }
+
 
 class Results(Page):
 
@@ -68,6 +84,7 @@ class MyWaitPage(WaitPage):
 
 
 page_sequence = [
+    StartPage,
     Decision,
     DecisionWaitPage,
     Results,

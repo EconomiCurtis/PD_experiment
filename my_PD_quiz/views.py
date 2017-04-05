@@ -6,12 +6,19 @@ from .models import Constants
 from otreeutils.pages import AllGroupsWaitPage, ExtendedPage, UnderstandingQuestionsPage, APPS_DEBUG
 
 
+class StartPage(Page):
+    def is_displayed(self):
+        if self.round_number == 1:
+            print('This is the start of PD quiz')
+        return self.round_number == 1
+
+
 class SomeUnderstandingQuestions(UnderstandingQuestionsPage):
     page_title = 'Quiz questions of Part I'
     set_correct_answers = APPS_DEBUG    # this is the default setting
     # set_correct_answers = False  # do not fill out the correct answers in advance (this is for fast skipping through pages)
     form_model = models.Player
-    form_field_n_wrong_attempts = 'understanding_questions_wrong_attempts'
+    form_field_n_wrong_attempts = 'wrong_attempts'
     questions = [
         {
             'question': 'You will be playing with the same participant in all interactions throughout Part I.',
@@ -30,7 +37,7 @@ class SomeUnderstandingQuestions(UnderstandingQuestionsPage):
             'correct': '0.6',
         },
         {
-            'question': "Both you and the other person you are matched with chose A, and you received a random draw 'a'. The probability that the other person also received 'a' random draw a is",
+            'question': "Both you and the other person you are matched with chose A, and you received a signal 'a'. The probability that the other person also received 'a' signal a is",
             'options': [0.95, 0.6, 0.55, 0.4],
             'correct': '0.95',
         },
@@ -40,27 +47,27 @@ class SomeUnderstandingQuestions(UnderstandingQuestionsPage):
             'correct': 'False',
         },
         {
-            'question': "The random draw you receive depends on the choice of the other person you are matched with.",
+            'question': "The signal you receive depends on the choice of the other person you are matched with.",
             'options': ['True', 'False'],
             'correct': 'True',
         },
         {
-            'question': "If you choose A, the probability for the other person to receive a random draw 'a' is always higher than receiving a random draw 'b'.",
+            'question': "If you choose A, the probability for the other person to receive a signal 'a' is higher than receiving a signal 'b'.",
             'options': ['True', 'False'],
             'correct': 'True',
         },
         {
-            'question': "When you and the other person make the same choice, the probability for you two to receive the same random draw is",
+            'question': "When you and the other person both choose A, the probability for you two to receive the same signal is",
             'options': [0.95, 0.6, 0.55, 0.4],
             'correct': '0.95',
         },
         {
-            'question': "You and the other person can send messages about the random draws you received to help each other make decisions.",
+            'question': "You and the other person can send messages about the signals you received to help each other make decisions.",
             'options': ['True', 'False'],
             'correct': 'True',
         },
         {
-            'question': "When you and the other person have different choices, the random draw you receive is independent from the random draw the other person receives.",
+            'question': "When you and the other person make different choices, the signal you receive is independent from the signal the other person receives.",
             'options': ['True', 'False'],
             'correct': 'True',
         },
@@ -68,20 +75,21 @@ class SomeUnderstandingQuestions(UnderstandingQuestionsPage):
 
 
 class QuizResults(Page):
-    timeout_seconds = 30
+    timeout_seconds = 10
 
     def vars_for_template(self):
         return {
-            'quiz_payment': max(10-self.player.understanding_questions_wrong_attempts,0)
+            'quiz_payment': max(10-2*self.player.wrong_attempts,0)
         }
 
     def before_next_page(self):
-        self.player.payoff = max(10-self.player.understanding_questions_wrong_attempts,0) / self.session.config['real_world_currency_per_point']
+        self.player.payoff = max(10-2*self.player.wrong_attempts,0) / self.session.config['real_world_currency_per_point']
         # payoff are always in points, hence divided by self.session.vars['real_world_currency_per_point']
         self.player.participant.vars['payoff_quiz'] = self.player.payoff.to_real_world_currency(self.session)
 
 
 page_sequence = [
+    StartPage,
     SomeUnderstandingQuestions,
     QuizResults,
     AllGroupsWaitPage,

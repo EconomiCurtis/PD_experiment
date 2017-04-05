@@ -2,12 +2,16 @@ from . import models
 from ._builtin import Page, WaitPage
 from otree.api import Currency as c, currency_range
 from .models import Constants
+import random
 
 
 class Introduction(Page):
-    timeout_seconds = 10
+    timeout_seconds = 30
 
     def is_displayed(self):
+        if self.round_number == 1:
+            print('This is the start of PD')
+        # return self.round_number == 1 and (not self.session.config['debug'])
         return self.round_number == 1
 
 
@@ -16,6 +20,10 @@ class Decision(Page):
     form_model = models.Player
     form_fields = ['action']
 
+    def before_next_page(self):
+        if self.timeout_happened:
+            self.player.action = random.choice(['A','B'])
+
 
 class DecisionWaitPage(WaitPage):
     template_name = 'my_PD/DecisionWaitPage.html'
@@ -23,7 +31,7 @@ class DecisionWaitPage(WaitPage):
     def after_all_players_arrive(self):
         # it only gets executed once
         self.group.interact()
-        print('players have interacted!')
+        # print('players have interacted!')
 
 
 class Signal(Page):
@@ -31,21 +39,25 @@ class Signal(Page):
     form_model = models.Player
     form_fields = ['message']
 
+    def before_next_page(self):
+        if self.timeout_happened:
+            self.player.message = random.choice(['a','b'])
+
 
 class SignalWaitPage(WaitPage):
     template_name = 'my_PD/SignalWaitPage.html'
 
     def after_all_players_arrive(self):
         self.group.send_message()
-        print('message is sent!')
+        # print('message is sent!')
 
 
 class Results(Page):
-    timeout_seconds = 10
+    timeout_seconds = 8
 
 
 class Continuation(Page):
-    timeout_seconds = 5
+    timeout_seconds = 8
 
     def is_displayed(self):
         return Constants.number_sequence[self.subsession.round_number-1] <= 6
@@ -57,7 +69,7 @@ class Continuation(Page):
 
 
 class InteractionResults(Page):
-    timeout_seconds = 45
+    timeout_seconds = 30
 
     def is_displayed(self):
         return Constants.number_sequence[self.subsession.round_number-1] > 6
@@ -78,11 +90,11 @@ class RematchingWaitPage(WaitPage):
 
     def after_all_players_arrive(self):
         self.subsession.group_randomly()  # randomly rematching
-        print('Group randomly rematched')
+        print((self.subsession.round_number,'Group randomly rematched'))
         if self.round_number == Constants.num_rounds:
             for p in self.subsession.get_players():
                 p.participant.vars['payoff_PD'] = sum([this_player.payoff for this_player in p.in_all_rounds()])
-                print((p,sum([this_player.payoff for this_player in p.in_all_rounds()])),p.participant.vars['payoff_PD'])
+                print(('my_PD_RematchingWaitPage',self.round_number,p,sum([this_player.payoff for this_player in p.in_all_rounds()])),p.participant.vars['payoff_PD'])
 
 page_sequence = [
     Introduction,

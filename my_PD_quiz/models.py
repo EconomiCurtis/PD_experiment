@@ -4,10 +4,10 @@ from otree.api import (
 )
 
 
-author = 'Your name here'
+author = 'Huanren Zhang'
 
 doc = """
-Your app description
+Quiz questions that test the understanding of PD with private monitoring and communication
 """
 
 
@@ -26,4 +26,4 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    understanding_questions_wrong_attempts = models.PositiveIntegerField()   # number of wrong attempts on understanding quesions page
+    wrong_attempts = models.PositiveIntegerField()   # number of wrong attempts on understanding questions page
