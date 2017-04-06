@@ -13,7 +13,7 @@ class PlayerBot(Bot):
         if self.session.config['treatment'] == 'COM':
             yield (views.Signal, {"message": random.choice(['a','b'])})
         yield (views.Results)
-        if Constants.number_sequence[self.subsession.round_number-1] > 6:
+        if Constants.number_sequence[self.subsession.round_number-1] > 9:
             yield (views.InteractionResults)
         else:
             yield (views.Continuation)

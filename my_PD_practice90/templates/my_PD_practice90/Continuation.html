@@ -2,34 +2,22 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-    Results
 {% endblock %}
 
 
 {% block content %}
-    <p style="font-size:16px">Round {{ player.round_in_interaction }} of Interaction {{ player.interaction_number }} </p>
-
-    {% include Constants.instructions_template %}
-
-    <div style="font-size:16px">
-    <p style="text-align:center">Summary of this round</p>
-    <table class="table-condensed" style="margin:auto; width:500px; margin-top:20px;">
-        <tr><td>Your choice:</td><td>{{ player.action}}</td></tr>
-        <tr><td>The signal you received about the other's choice:</td><td>{{ player.signal}} </td></tr>
-        {% if treatment == 'COM' %}
-            <tr><td>The message you sent:</td><td>{{ player.message }}</td></tr>
-            <tr><td>The message the other sent:</td><td>{{ player.other_message }}</td></tr>
-        {% endif %}
-        {% if treatment == 'PBL' %}
-            <tr><td>The signal the other person received about your choice:</td><td>{{ player.other_signal}} </td></tr>
-        {% endif %}
-        <tr><td colspan="2"><hr/></td></tr>
-    </table>
+    <div style="text-align:center;font-size:16px">
+        <p>
+            The computer generated random number {{ number_generated }}, which is NOT more than 9.
+        </p>
+        <p>
+            The interaction will continue for another round.
+        </p>
     </div>
 
-          <div style="text-align:right">
-            {% next_button %}
-        </div>
+    <div style="text-align:right">
+        {% next_button %}
+    </div>
 
     <hr>
 
@@ -54,7 +42,7 @@
             {% for p in player.in_previous_rounds %}
                 {% if p.interaction_number == player.interaction_number %}
                     <tr>
-                        <td>{{ p.interaction_number}}</td>
+                        <th style="text-align:center">'Practice'</th>
                         <td>{{ p.round_in_interaction }}</td>
                         <td>{{ p.action}}</td>
                         <td>{{ p.signal }}</td>
@@ -81,13 +69,9 @@
                 <th style="text-align:center">Round</th>
                 <th style="text-align:center">Your choice</th>
                 <th style="text-align:center">Your signal</th>
-
                 {% if treatment == 'COM' %}
                     <th style="text-align:center">Message you sent</th>
                     <th style="text-align:center">Message other sent</th>
-                {% endif %}
-                {% if treatment == 'PBL' %}
-                    <th style="text-align:center">Other's signal</th>
                 {% endif %}
                 <th style="text-align:center">Other's choice</th>
                 <th style="text-align:center">Other's signal</th>
@@ -105,12 +89,9 @@
                             <td>{{ p.message}}</td>
                             <td>{{ p.other_message}}</td>
                         {% endif %}
-                        {% if treatment == 'PBL' %}
-                            <td>{{ p.other_signal }}</td>
-                        {% endif %}
                         <td>{{ p.other_action}}</td>
                         <td>{{ p.other_signal}}</td>
-                        <td>{{ p.payoff}}</td>
+                        <td>{{ p.payoff0}}</td>
                         <td>{{ p.cum_payoff}}</td>
                     </tr>
                 {% endif %}

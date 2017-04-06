@@ -2,7 +2,7 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-    Practice interaction: results
+    Results
 {% endblock %}
 
 
@@ -11,7 +11,7 @@
     <div style="text-align:center;font-size:16px">
         <p>
             <strong>
-                The computer generated random number {{ number_generated }}, which is greater than 6. The interaction is ending now.
+                The computer generated random number {{ number_generated }}, which is greater than 9. The interaction is ending now.
             </strong>
         </p>
         <p>
@@ -50,7 +50,7 @@
         {% for p in player.in_all_rounds %}
             {% if p.interaction_number == player.interaction_number %}
                 <tr>
-                    <th style="text-align:center">'Practice'</th>
+                    <td>{{ p.interaction_number}}</td>
                     <td>{{ p.round_in_interaction}}</td>
                     <td>{{ p.action}}</td>
                     <td>{{ p.signal }}</td>
@@ -60,7 +60,7 @@
                     {% endif %}
                     <td>{{ p.other_action}}</td>
                     <td>{{ p.other_signal}}</td>
-                    <td>{{ p.payoff0}}</td>
+                    <td>{{ p.payoff}}</td>
                     <td>{{ p.cum_payoff}}</td>
                 </tr>
             {% endif %}
@@ -71,7 +71,7 @@
         {% next_button %}
     </div>
 
-    {% if player.interaction_number > 1 %}
+    {% if player.interaction_number != 1 %}
         <h5 style="text-align:center">
             History for previous interactions
         </h5>
@@ -103,7 +103,7 @@
                         {% endif %}
                         <td>{{ p.other_action}}</td>
                         <td>{{ p.other_signal}}</td>
-                        <td>{{ p.payoff0}}</td>
+                        <td>{{ p.payoff}}</td>
                         <td>{{ p.cum_payoff}}</td>
                     </tr>
                 {% endif %}

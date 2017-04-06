@@ -7,33 +7,22 @@
 
 
 {% block content %}
-    <p style="font-size:16px">Round {{ player.round_in_interaction }} of Interaction {{ player.interaction_number }} </p>
-
-    {% include Constants.instructions_template %}
-
-    <div style="font-size:16px">
-    <p style="text-align:center">Summary of this round</p>
-    <table class="table-condensed" style="margin:auto; width:500px; margin-top:20px;">
-        <tr><td>Your choice:</td><td>{{ player.action}}</td></tr>
-        <tr><td>The signal you received about the other's choice:</td><td>{{ player.signal}} </td></tr>
-        {% if treatment == 'COM' %}
-            <tr><td>The message you sent:</td><td>{{ player.message }}</td></tr>
-            <tr><td>The message the other sent:</td><td>{{ player.other_message }}</td></tr>
-        {% endif %}
-        {% if treatment == 'PBL' %}
-            <tr><td>The signal the other person received about your choice:</td><td>{{ player.other_signal}} </td></tr>
-        {% endif %}
-        <tr><td colspan="2"><hr/></td></tr>
-    </table>
+    <div style="text-align:center;font-size:16px">
+        <p>
+            The computer generated random number {{ number_generated }}, which is NOT more than 9.
+        </p>
+        <p>
+            The interaction will continue for another round.
+        </p>
     </div>
 
-          <div style="text-align:right">
-            {% next_button %}
-        </div>
+    <div style="text-align:right">
+        {% next_button %}
+    </div>
 
     <hr>
 
-    {% if player.round_in_interaction != 1 %}
+   {% if player.round_in_interaction != 1 %}
         <p style="text-align:center;font-size:16px">
             History for the current interaction
         </p>
@@ -86,9 +75,6 @@
                     <th style="text-align:center">Message you sent</th>
                     <th style="text-align:center">Message other sent</th>
                 {% endif %}
-                {% if treatment == 'PBL' %}
-                    <th style="text-align:center">Other's signal</th>
-                {% endif %}
                 <th style="text-align:center">Other's choice</th>
                 <th style="text-align:center">Other's signal</th>
                 <th style="text-align:center">Your earnings</th>
@@ -105,9 +91,6 @@
                             <td>{{ p.message}}</td>
                             <td>{{ p.other_message}}</td>
                         {% endif %}
-                        {% if treatment == 'PBL' %}
-                            <td>{{ p.other_signal }}</td>
-                        {% endif %}
                         <td>{{ p.other_action}}</td>
                         <td>{{ p.other_signal}}</td>
                         <td>{{ p.payoff}}</td>
@@ -117,6 +100,7 @@
             {% endfor %}
         </table>
     {% endif %}
+
 
 
 {% endblock %}
